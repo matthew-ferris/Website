@@ -10,7 +10,7 @@ links:
   - label: Instagram
     url: "https://www.instagram.com/matthew_b_thuggin/"
   - label: GitHub
-    url: "https://github.com/"
+    url: "https://github.com/matthew-ferris"
   - label: Email
     url: "mailto:mmf269@msstate.edu"
 output:
