@@ -6,7 +6,6 @@ output_dir: "docs"
 base_url: https:matthew-ferris.rbind.io
 collections:
   posts:
-    disqus: reproducible-finance-with-r
     share: [twitter, linkedin, facebook]
 navbar:
   right:
