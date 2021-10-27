@@ -1,0 +1,21 @@
+---
+title: "Matthew Ferris"
+image: "headshot.jpg"
+color1: "#273b47"
+color2: "#646682"
+angle: 125
+links:
+  - label: LinkedIn
+    url: "https://www.linkedin.com/in/matthewbferris/"
+  - label: Instagram
+    url: "https://www.instagram.com/matthew_b_thuggin/"
+  - label: GitHub
+    url: "https://github.com/"
+  - label: Email
+    url: "mailto:mmf269@msstate.edu"
+output:
+  postcards::onofre
+site: distill::distill_website
+---
+ 
+I am a student in the Master of Professional Accountancy program at Mississippi State University, where I am also pursuing a graduate minor in accounting data analytics. 

@@ -1,0 +1,19 @@
+[
+  {
+    "path": "posts/2021-10-12-welcome/",
+    "title": "Welcome!",
+    "description": "The purpose of this post is to help my understanding with creating simple blog posts? Idk, honestly.",
+    "author": [
+      {
+        "name": "Matthew Ferris",
+        "url": {}
+      }
+    ],
+    "date": "2021-10-12",
+    "categories": [],
+    "contents": "\nHello? Is this thing even working? Like, honestly.\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-10-12T21:00:32-05:00",
+    "input_file": {}
+  }
+]

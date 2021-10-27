@@ -1,0 +1,11 @@
+---
+title: "Welcome!"
+description: |
+  The purpose of this post is to help my understanding with creating simple blog posts? Idk, honestly. 
+author:
+  - name: Matt Ferris
+date: 10-12-2021
+output:
+  distill::distill_article
+---
+Hello? Is this thing even working? Like, honestly.

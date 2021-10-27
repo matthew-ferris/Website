@@ -1,0 +1,22 @@
+name: "."
+title: "matthew-ferris"
+description: |
+  matthew-ferris
+output_dir: "docs"
+base_url: https:matthew-ferris.rbind.io
+collections:
+  posts:
+    disqus: reproducible-finance-with-r
+    share: [twitter, linkedin, facebook]
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "Blog"
+      href: blog.html
+output:
+  distill::distill_article:
+    toc: true
+    theme: postcards.css

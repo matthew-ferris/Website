@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>matthew-ferris</title>
+    <link>https:matthew-ferris.rbind.io</link>
+    <atom:link href="https:matthew-ferris.rbind.io/blog.xml" rel="self" type="application/rss+xml"/>
+    <description>matthew-ferris
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Welcome!</title>
+      <dc:creator>Matthew Ferris</dc:creator>
+      <link>https:matthew-ferris.rbind.io/posts/2021-10-12-welcome</link>
+      <description>The purpose of this post is to help my understanding with creating simple blog posts? Idk, honestly.</description>
+      <guid>https:matthew-ferris.rbind.io/posts/2021-10-12-welcome</guid>
+      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
