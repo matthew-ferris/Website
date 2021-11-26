@@ -5,9 +5,7 @@ date: "11/24/2021"
 output: html_document
 ---
 
-The purpose of this project is to use audit data to predict the issuance of a Going Concern Opinion. 
-
-```{r Load Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
+```{r Load Libraries,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
 if (!require("lattice")) install.packages("lattice")
 library(lattice)
 library(ggplot2)
@@ -21,28 +19,49 @@ if (!require("stringr")) install.packages("stringr")
 library(stringr)
 if (!require("RANN")) install.packages("RANN")
 library(RANN)
+```
 
+```{r Load Data, message=FALSE, include=FALSE, warning=FALSE,echo=FALSE}
 setwd("~/Desktop/Analytics/Website")
 
 Data<-read.csv("Data.csv",na.strings = ".")
 attach(Data)
+Data$GOING_CONCERN<-as.factor(Data$GOING_CONCERN)
 ```
 
-```{r Cleaning Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
-str(Data)
+Using a dataset obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood of a Going Concern opinion will be issued by an auditor. 
 
-#To see how much is na
-sum(is.na(Data))/prod(dim(Data))
+To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute. 
 
-#simply remove missing values?
-Data<-na.omit(Data)
-
-Data$GOING_CONCERN<-as.factor(Data$GOING_CONCERN)
-
-#to see the distribution of the dependent variable (Going Concern)
+```{r Dependent Variable Distribution Pt. 1, echo=TRUE}
 table(Data$GOING_CONCERN)
-#the data is not distributed evenly. Do I need to over-sample?
+```
 
+You can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion. 
+
+After reviewing the dataset some more, I noticed that there were a relatively large amount of NAs in the observations. Using this formula, you can see the percentage of the data that is NA. 
+
+```{r How much NA?, echo=TRUE}
+sum(is.na(Data))/prod(dim(Data))
+```
+
+You can see that roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make "estimates" of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. 
+
+```{r Remove NAs, echo=TRUE}
+Data<-na.omit(Data)
+```
+
+After omitting the NAs, I wanted to see the new distribution of the dependent variable. 
+
+```{r Dependent Variable Distribution Pt. 2, echo=TRUE}
+table(Data$GOING_CONCERN)
+```
+
+The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.
+
+**Note: Do I need to over-sample? Such as using SMOTE or a similar function?**
+
+```{r Knn Classification,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 #split the test/train data
 trainIndex <- createDataPartition(Data$GOING_CONCERN, p = .5, list = FALSE, times = 1)
 #grab the data
@@ -64,7 +83,6 @@ knn_fit
 
 knn_pred<-predict(knn_fit,testTransformed)
 confusionMatrix(knn_pred,testTransformed[1])
-
 ```
 
 ```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
