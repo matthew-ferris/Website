@@ -7,8 +7,7 @@ output: html_document
 
 The purpose of this project is to use audit data to predict the issuance of a Going Concern Opinion. 
 
-
-```{r Load Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+```{r Load Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 if (!require("lattice")) install.packages("lattice")
 library(lattice)
 library(ggplot2)
