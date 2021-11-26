@@ -2448,8 +2448,59 @@ Projects
 <p>The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <p><strong>Note: Do I need to over-sample? Such as using SMOTE or a similar function?</strong></p>
 <p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
+<span class='va'>trainIndex</span> <span class='op'>&lt;-</span> <span class='fu'>createDataPartition</span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span>, p <span class='op'>=</span> <span class='fl'>.5</span>, list <span class='op'>=</span> <span class='cn'>FALSE</span>, times <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='co'>#grab the data</span>
+<span class='va'>DataTrain</span> <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span> <span class='va'>trainIndex</span>,<span class='op'>]</span>
+<span class='va'>DataTest</span>  <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span><span class='op'>-</span><span class='va'>trainIndex</span>,<span class='op'>]</span>
+
+<span class='va'>preProcValues</span> <span class='op'>&lt;-</span> <span class='fu'>preProcess</span><span class='op'>(</span><span class='va'>DataTrain</span>, method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"center"</span>, <span class='st'>"scale"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>trainTransformed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>preProcValues</span>, <span class='va'>DataTrain</span><span class='op'>)</span>
+
+<span class='va'>preProcValues</span> <span class='op'>&lt;-</span> <span class='fu'>preProcess</span><span class='op'>(</span><span class='va'>DataTest</span>, method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"center"</span>, <span class='st'>"scale"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>testTransformed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>preProcValues</span>, <span class='va'>DataTest</span><span class='op'>)</span>
+
+<span class='va'>knn_fit</span><span class='op'>&lt;-</span><span class='fu'>train</span><span class='op'>(</span><span class='va'>GOING_CONCERN</span><span class='op'>~</span><span class='va'>MATCHFY_BALSH_ASSETS</span><span class='op'>+</span><span class='va'>MATCHFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_CHANGE_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_OP_ACT_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>PRIORFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>CIK_Code</span>,
+               data<span class='op'>=</span><span class='va'>trainTransformed</span>,
+               method<span class='op'>=</span><span class='st'>"knn"</span>,
+               tuneGrid<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>k<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>knn_fit</span>,<span class='va'>testTransformed</span><span class='op'>)</span>
+<span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='va'>testTransformed</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 18604   753
+         1   633   268
+                                        
+               Accuracy : 0.9316        
+                 95% CI : (0.928, 0.935)
+    No Information Rate : 0.9496        
+    P-Value [Acc &gt; NIR] : 1.000000      
+                                        
+                  Kappa : 0.2431        
+                                        
+ Mcnemar&#39;s Test P-Value : 0.001391      
+                                        
+            Sensitivity : 0.9671        
+            Specificity : 0.2625        
+         Pos Pred Value : 0.9611        
+         Neg Pred Value : 0.2974        
+             Prevalence : 0.9496        
+         Detection Rate : 0.9184        
+   Detection Prevalence : 0.9555        
+      Balanced Accuracy : 0.6148        
+                                        
+       &#39;Positive&#39; Class : 0             
+                                        </code></pre>
+</div>
 <p>We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

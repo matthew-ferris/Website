@@ -58,7 +58,7 @@ The dataset has now been reduced from 56,000 observations to 40,500. Of those en
 
 To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. First, I will need to partition the data into two different sets: the first as a "training" set, which 'trains' the algorithm, and the second as a "testing" set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix. 
 
-```{r Knn Classification,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+```{r Knn Classification,message=FALSE,warning=FALSE}
 #split the test/train data
 trainIndex <- createDataPartition(Data$GOING_CONCERN, p = .5, list = FALSE, times = 1)
 #grab the data
