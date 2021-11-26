@@ -4,9 +4,6 @@ description: |
   matthew-ferris
 output_dir: "docs"
 base_url: https:matthew-ferris.rbind.io
-collections:
-  posts:
-    share: [twitter, linkedin, facebook]
 navbar:
   right:
     - text: "Home"
@@ -16,6 +13,7 @@ navbar:
     - text: "R Squared"
       href: RSquared.html
     - text: "Going Concern Predictions Project"
+      href: project.html
 output:
   distill::distill_article:
     toc: true
