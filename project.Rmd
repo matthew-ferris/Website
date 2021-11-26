@@ -1,6 +1,7 @@
 ---
 title: "Using Machine Learning Classification Techniques to Predict Going Concern Opinions"
 author: "Matt Ferris"
+date: "November 26, 2021"
 output: 
   distill::distill_article
 ---
@@ -29,7 +30,7 @@ attach(Data)
 Data$GOING_CONCERN<-as.factor(Data$GOING_CONCERN)
 ```
 
-Using a dataset obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood of a Going Concern opinion will be issued by an auditor. 
+Using a dataset obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. 
 
 To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute. 
 
