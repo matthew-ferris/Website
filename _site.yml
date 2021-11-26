@@ -10,7 +10,7 @@ navbar:
       href: index.html
     - text: "Resume"
       href: Resume.html
-    - text: "Projects:
+    - text: "Projects"
       menu: 
         - text: "R Squared"
           href: RSquared.html

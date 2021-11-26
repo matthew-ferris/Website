@@ -2374,8 +2374,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="nav-right">
 <a href="index.html">Home</a>
 <a href="Resume.html">Resume</a>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Projects
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="RSquared.html">R Squared</a>
 <a href="project.html">Going Concern Predictions Project</a>
+</div>
+</div>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2438,6 +2447,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <p>The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <p><strong>Note: Do I need to over-sample? Such as using SMOTE or a similar function?</strong></p>
+<p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
+<p>We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

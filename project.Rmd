@@ -7,18 +7,12 @@ output:
 ---
 
 ```{r Load Libraries,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
-if (!require("lattice")) install.packages("lattice")
 library(lattice)
 library(ggplot2)
-if (!require("caret")) install.packages("caret")
 library(caret)
-if (!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
-if (!require("corrplot")) install.packages("corrplot")
 library(corrplot)
-if (!require("stringr")) install.packages("stringr")
 library(stringr)
-if (!require("RANN")) install.packages("RANN")
 library(RANN)
 ```
 
@@ -62,7 +56,9 @@ The dataset has now been reduced from 56,000 observations to 40,500. Of those en
 
 **Note: Do I need to over-sample? Such as using SMOTE or a similar function?**
 
-```{r Knn Classification,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
+To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. First, I will need to partition the data into two different sets: the first as a "training" set, which 'trains' the algorithm, and the second as a "testing" set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix. 
+
+```{r Knn Classification,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
 #split the test/train data
 trainIndex <- createDataPartition(Data$GOING_CONCERN, p = .5, list = FALSE, times = 1)
 #grab the data
@@ -80,11 +76,11 @@ knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY
                method="knn",
                tuneGrid=data.frame(k=4))
 
-knn_fit
-
 knn_pred<-predict(knn_fit,testTransformed)
-confusionMatrix(knn_pred,testTransformed[1])
+confusionMatrix(knn_pred,testTransformed$GOING_CONCERN)
 ```
+
+We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. 
 
 ```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 #cluster
