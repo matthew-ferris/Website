@@ -16,7 +16,7 @@ navbar:
     - text: "Projects"
       menu:
         - text: "R Squared"
-          href: 
+          href: RSquared.html
 output:
   distill::distill_article:
     toc: true
