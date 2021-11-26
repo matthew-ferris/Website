@@ -11,10 +11,12 @@ navbar:
   right:
     - text: "Home"
       href: index.html
-    - text: "About"
-      href: about.html
-    - text: "Blog"
-      href: blog.html
+    - text: "Resume"
+      href: Resume.html
+    - text: "Projects"
+      menu:
+        - text: "R Squared"
+          href: 
 output:
   distill::distill_article:
     toc: true
