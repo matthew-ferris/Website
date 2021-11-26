@@ -1,7 +1,8 @@
 ---
 title: "Using Machine Learning Classification Techniques to Predict Going Concern Opinions"
 author: "Matt Ferris"
-output: html_document
+output: 
+  distill::distill_article
 ---
 
 ```{r Load Libraries,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
