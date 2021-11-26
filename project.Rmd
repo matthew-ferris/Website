@@ -5,6 +5,9 @@ date: "11/24/2021"
 output: html_document
 ---
 
+The purpose of this project is to use audit data to predict the issuance of a Going Concern Opinion. 
+
+
 ```{r Load Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
 if (!require("lattice")) install.packages("lattice")
 library(lattice)

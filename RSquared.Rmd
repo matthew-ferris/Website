@@ -1,5 +1,5 @@
 ---
-title: "RSqaured"
+title: "RSquared"
 author: "Matt Ferris"
 date: "11/26/2021"
 output: html_document
