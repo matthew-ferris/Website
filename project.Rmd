@@ -1,7 +1,6 @@
 ---
-title: "Audit Dataset"
+title: "Using Machine Learning Classification Techniques to Predict Going Concern Opinions"
 author: "Matt Ferris"
-date: "11/24/2021"
 output: html_document
 ---
 
