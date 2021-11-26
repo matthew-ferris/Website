@@ -1169,7 +1169,7 @@ Projects
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<span class="nav-dropdown-header">R Squared</span>
+<a href="RSquared.html">R Squared</a>
 </div>
 </div>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
@@ -1208,7 +1208,9 @@ Projects
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">R Squared</li>
+    <li>
+      <a href="RSquared.html">R Squared</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -1228,9 +1230,9 @@ Projects
 
 
 <ol style="list-style-type: decimal">
-<li>R-squared does not measure goodness of fit. It can be arbitrarily low when the model is completely correct. By making variance large, we drive R-squared towards 0, even when every assumption of the simple linear regression model is correct in every particular.</li>
+<li>R-squared does not measure goodness of fit. It can be arbitrarily low when the model is completely correct. By making <span class="math inline">\(σ^2\)</span> large, we drive R-squared towards 0, even when every assumption of the simple linear regression model is correct in every particular.</li>
 </ol>
-<p>What is? When we perform linear regression, we assume our model almost predicts our dependent variable. The difference between “almost” and “exact” is assumed to be a draw from a Normal distribution with mean 0 and some variance we call .</p>
+<p>What is <span class="math inline">\(σ^2\)</span>? When we perform linear regression, we assume our model almost predicts our dependent variable. The difference between “almost” and “exact” is assumed to be a draw from a Normal distribution with mean 0 and some variance we call <span class="math inline">\(σ^2\)</span>.</p>
 <p>This statement is easy enough to demonstrate. The way we do it here is to create a function that (1) generates data meeting the assumptions of simple linear regression (independent observations, normally distributed errors with constant variance), (2) fits a simple linear model to the data, and (3) reports the R-squared. Notice the only parameter for sake of simplicity is sigma. We then “apply” this function to a series of increasing variance values and plot the results.</p>
 <pre class="r"><code>r2.0 &lt;- function(sig){
   # our predictor
@@ -1238,7 +1240,7 @@ Projects
   # our response; a function of x plus some random noise
   y &lt;- 2 + 1.2*x + rnorm(100,0,sd = sig) 
   # print the R-squared value
-  summary(lm(y ~ x))[[&#39;r.squared&#39;]]          
+  summary(lm(y ~ x))$r.squared          
 }
 sigmas &lt;- seq(0.5,20,length.out = 20)
  # apply our function to a series of sigma values
