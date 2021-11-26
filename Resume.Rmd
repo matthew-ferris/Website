@@ -1,7 +1,6 @@
 ---
 output:
-  html_document: default
-  pdf_document: default
+  distill::distill_article
 editor_options: 
   markdown: 
     wrap: 50
