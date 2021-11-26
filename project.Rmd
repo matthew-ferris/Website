@@ -26,7 +26,7 @@ Data<-read.csv("Data.csv",na.strings = ".")
 attach(Data)
 ```
 
-```{r Cleaning Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+```{r Cleaning Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 str(Data)
 
 #To see how much is na
@@ -65,7 +65,7 @@ confusionMatrix(knn_pred,testTransformed[1])
 
 ```
 
-```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 #cluster
 #trainTransformed<-subset(trainTransformed,select = -c(AUDITOR_STATE))
 Clusters<-kmeans(trainTransformed,centers=4)
