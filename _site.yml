@@ -11,7 +11,7 @@ navbar:
     - text: "Resume"
       href: Resume.html
     - text: "R Squared"
-      href: RSquared.html
+      href: rsquared.html
     - text: "Going Concern Predictions Project"
       href: project.html
 output:
