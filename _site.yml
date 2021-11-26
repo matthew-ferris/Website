@@ -17,6 +17,8 @@ navbar:
       menu:
         - text: "R Squared"
           href: RSquared.html
+        - text: "Going Concern Predictions Project"
+          Href: project.html
 output:
   distill::distill_article:
     toc: true

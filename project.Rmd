@@ -1,0 +1,80 @@
+---
+title: "Audit Dataset"
+author: "Matt Ferris"
+date: "11/24/2021"
+output: html_document
+---
+
+```{r Load Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+if (!require("lattice")) install.packages("lattice")
+library(lattice)
+library(ggplot2)
+if (!require("caret")) install.packages("caret")
+library(caret)
+if (!require("tidyverse")) install.packages("tidyverse")
+library(tidyverse)
+if (!require("corrplot")) install.packages("corrplot")
+library(corrplot)
+if (!require("stringr")) install.packages("stringr")
+library(stringr)
+if (!require("RANN")) install.packages("RANN")
+library(RANN)
+
+setwd("~/Desktop/Analytics/Website")
+
+Data<-read.csv("Data.csv",na.strings = ".")
+attach(Data)
+```
+
+```{r Cleaning Data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+str(Data)
+
+#To see how much is na
+sum(is.na(Data))/prod(dim(Data))
+
+#simply remove missing values?
+Data<-na.omit(Data)
+
+Data$GOING_CONCERN<-as.factor(Data$GOING_CONCERN)
+
+#to see the distribution of the dependent variable (Going Concern)
+table(Data$GOING_CONCERN)
+#the data is not distributed evenly. Do I need to over-sample?
+
+#split the test/train data
+trainIndex <- createDataPartition(Data$GOING_CONCERN, p = .5, list = FALSE, times = 1)
+#grab the data
+DataTrain <- Data[ trainIndex,]
+DataTest  <- Data[-trainIndex,]
+
+preProcValues <- preProcess(DataTrain, method = c("center", "scale"))
+trainTransformed <- predict(preProcValues, DataTrain)
+
+preProcValues <- preProcess(DataTest, method = c("center", "scale"))
+testTransformed <- predict(preProcValues, DataTest)
+
+knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
+               data=trainTransformed,
+               method="knn",
+               tuneGrid=data.frame(k=4))
+
+knn_fit
+
+knn_pred<-predict(knn_fit,testTransformed)
+confusionMatrix(knn_pred,testTransformed[1])
+
+```
+
+```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+#cluster
+#trainTransformed<-subset(trainTransformed,select = -c(AUDITOR_STATE))
+Clusters<-kmeans(trainTransformed,centers=4)
+Clusterdata<-trainTransformed
+Clusterdata$Cluster<-as.factor(Clusters$cluster)
+
+ggplot(data=Clusterdata,mapping = aes(x=MATCHFY_CSHFLST_OP_ACT_TTM,y=MATCHFY_INCMST_NETINC_TTM,color=Cluster))+geom_point(alpha=0.5)
+
+ggplot(data=Clusterdata,mapping = aes(x=MATCHFY_CSHFLST_OP_ACT_TTM,y=MATCHFY_INCMST_NETINC_TTM,color=Cluster))+geom_point(alpha=0.5)+facet_wrap(~GOING_CONCERN)
+```
+
+
