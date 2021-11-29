@@ -82,6 +82,8 @@ knn_pred<-predict(knn_fit,testTransformed)
 ConfusionMatrix<-confusionMatrix(knn_pred,testTransformed$GOING_CONCERN)
 ```
 
+Here is a quick glance at what the model predicted vs. what actually occurred: 
+
 ```{r Confusion Matrix Table}
 ggplot(as.data.frame(ConfusionMatrix$table))+
   geom_raster(aes(x=Reference, y=Prediction, fill=Freq))+
@@ -93,8 +95,14 @@ ggplot(as.data.frame(ConfusionMatrix$table))+
   theme(plot.title = element_text(hjust = 0.5, size = 10, face = 'bold'))
 ```
 
+And here are some more specific statistics: 
 
-We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
+```{r confusion matrix stats}
+ConfusionMatrix
+```
+
+
+We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. The table shows of the nearly 1,000 observations of a Going Concern opinion being issued, the model only identified a little more than a tenth of them. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
 
 ```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 #cluster

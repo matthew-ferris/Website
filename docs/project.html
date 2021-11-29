@@ -2473,6 +2473,7 @@ Projects
 </code></pre>
 </div>
 </div>
+<p>Here is a quick glance at what the model predicted vs. what actually occurred:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>ConfusionMatrix</span><span class='op'>$</span><span class='va'>table</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span>
@@ -2487,8 +2488,42 @@ Projects
 </div>
 <p><img src="project_files/figure-html5/Confusion%20Matrix%20Table-1.png" width="624" /></p>
 </div>
-<p>We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>And here are some more specific statistics:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>ConfusionMatrix</span>
+</code></pre>
+</div>
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 18710   754
+         1   527   267
+                                          
+               Accuracy : 0.9368          
+                 95% CI : (0.9333, 0.9401)
+    No Information Rate : 0.9496          
+    P-Value [Acc &gt; NIR] : 1               
+                                          
+                  Kappa : 0.2617          
+                                          
+ Mcnemar&#39;s Test P-Value : 2.712e-10       
+                                          
+            Sensitivity : 0.9726          
+            Specificity : 0.2615          
+         Pos Pred Value : 0.9613          
+         Neg Pred Value : 0.3363          
+             Prevalence : 0.9496          
+         Detection Rate : 0.9236          
+   Detection Prevalence : 0.9608          
+      Balanced Accuracy : 0.6171          
+                                          
+       &#39;Positive&#39; Class : 0               
+                                          </code></pre>
+</div>
+<p>We can see that this model did not perform <em>spectacularly</em>. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. The table shows of the nearly 1,000 observations of a Going Concern opinion being issued, the model only identified a little more than a tenth of them. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
