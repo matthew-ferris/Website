@@ -24,7 +24,7 @@ attach(Data)
 Data$GOING_CONCERN<-as.factor(Data$GOING_CONCERN)
 ```
 
-Using data obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes for current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
+Using data obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
 
 To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute. 
 
@@ -56,7 +56,7 @@ The dataset has now been reduced from 56,000 observations to 40,500. Of those en
 
 **Note: Do I need to over-sample? Such as using SMOTE or a similar function?**
 
-To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company's auditor. The algorithm does this by measuring the distance between the "test data," which is what we are trying to predict, and the "training data."
+To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company's auditor. The algorithm does this by measuring the distance between the "test data," which is what we are trying to predict, and the "training data." The model then makes a prediction based on the nearest data points in the training data. 
 
 First, I will need to partition the data into two different sets: the first as a "training" set, which 'trains' the algorithm, and the second as a "testing" set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix. 
 
@@ -97,14 +97,20 @@ ggplot(as.data.frame(ConfusionMatrix$table))+
 
 And here are some more specific statistics: 
 
-```{r confusion matrix stats, echo=FALSE}
+```{r confusion matrix stats, echo=FALSE, include=TRUE}
 ConfusionMatrix
 ```
-
 
 We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
 
 However, this model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. 
+
+The following plot illustrates the variables that the model deemed as the most important. Balance sheet assets, cash flows from operating activities, balance sheet book value, net income, and total audit fees were the most important variables used. 
+
+```{r, echo=FALSE, include=TRUE}
+plot(varImp(knn_fit),top = 9,main = "Importance of Variables")
+```
+
 
 ```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 #cluster
