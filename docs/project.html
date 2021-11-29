@@ -2408,7 +2408,7 @@ Projects
 </div>
 
 <div class="d-article">
-<p>Using a dataset obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor.</p>
+<p>Using data obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes for current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.</p>
 <p>To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2447,7 +2447,8 @@ Projects
 </div>
 <p>The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <p><strong>Note: Do I need to over-sample? Such as using SMOTE or a similar function?</strong></p>
-<p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
+<p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company’s auditor. The algorithm does this by measuring the distance between the “test data,” which is what we are trying to predict, and the “training data.”</p>
+<p>First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
@@ -2468,39 +2469,26 @@ Projects
                tuneGrid<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>k<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>knn_fit</span>,<span class='va'>testTransformed</span><span class='op'>)</span>
-<span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='va'>testTransformed</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
+<span class='va'>ConfusionMatrix</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='va'>testTransformed</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>Confusion Matrix and Statistics
-
-          Reference
-Prediction     0     1
-         0 18604   753
-         1   633   268
-                                        
-               Accuracy : 0.9316        
-                 95% CI : (0.928, 0.935)
-    No Information Rate : 0.9496        
-    P-Value [Acc &gt; NIR] : 1.000000      
-                                        
-                  Kappa : 0.2431        
-                                        
- Mcnemar&#39;s Test P-Value : 0.001391      
-                                        
-            Sensitivity : 0.9671        
-            Specificity : 0.2625        
-         Pos Pred Value : 0.9611        
-         Neg Pred Value : 0.2974        
-             Prevalence : 0.9496        
-         Detection Rate : 0.9184        
-   Detection Prevalence : 0.9555        
-      Balanced Accuracy : 0.6148        
-                                        
-       &#39;Positive&#39; Class : 0             
-                                        </code></pre>
 </div>
-<p>We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>ConfusionMatrix</span><span class='op'>$</span><span class='va'>table</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>geom_raster</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>Reference</span>, y<span class='op'>=</span><span class='va'>Prediction</span>, fill<span class='op'>=</span><span class='va'>Freq</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>geom_text</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>Reference</span>, y<span class='op'>=</span><span class='va'>Prediction</span>, label<span class='op'>=</span><span class='va'>Freq</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>scale_fill_gradient</span><span class='op'>(</span>low <span class='op'>=</span> <span class='st'>"pink"</span>, high <span class='op'>=</span> <span class='st'>"darkred"</span>, na.value <span class='op'>=</span> <span class='st'>"black"</span>, name<span class='op'>=</span><span class='st'>"Frequency"</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>scale_x_discrete</span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"Actual Class"</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>scale_y_discrete</span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"Predicted Class"</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>ggtitle</span><span class='op'>(</span><span class='st'>"Confusion Matrix"</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>theme</span><span class='op'>(</span>plot.title <span class='op'>=</span> <span class='fu'>element_text</span><span class='op'>(</span>hjust <span class='op'>=</span> <span class='fl'>0.5</span>, size <span class='op'>=</span> <span class='fl'>10</span>, face <span class='op'>=</span> <span class='st'>'bold'</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="project_files/figure-html5/Confusion%20Matrix%20Table-1.png" width="624" /></p>
+</div>
+<p>We can see that this model did not perform spectacularly. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
