@@ -84,11 +84,11 @@ ConfusionMatrix<-confusionMatrix(knn_pred,testTransformed$GOING_CONCERN)
 
 Here is a quick glance at what the model predicted vs. what actually occurred: 
 
-```{r Confusion Matrix Table}
+```{r Confusion Matrix Table, echo=FALSE}
 ggplot(as.data.frame(ConfusionMatrix$table))+
   geom_raster(aes(x=Reference, y=Prediction, fill=Freq))+
   geom_text(aes(x=Reference, y=Prediction, label=Freq))+
-  scale_fill_gradient(low = "pink", high = "darkred", na.value = "black", name="Frequency")+
+  scale_fill_gradient(low = "palegreen", high = "palegreen4", na.value = "black", name="Frequency")+
   scale_x_discrete(name="Actual Class")+
   scale_y_discrete(name = "Predicted Class")+
   ggtitle("Confusion Matrix")+
@@ -97,12 +97,14 @@ ggplot(as.data.frame(ConfusionMatrix$table))+
 
 And here are some more specific statistics: 
 
-```{r confusion matrix stats}
+```{r confusion matrix stats, echo=FALSE}
 ConfusionMatrix
 ```
 
 
-We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. The table shows of the nearly 1,000 observations of a Going Concern opinion being issued, the model only identified a little more than a tenth of them. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
+We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
+
+However, this model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. 
 
 ```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 #cluster

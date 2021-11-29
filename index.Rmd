@@ -18,4 +18,4 @@ output:
 site: distill::distill_website
 ---
  
-I am a student in the Master of Professional Accountancy program at Mississippi State University, where I am also pursuing a graduate minor in accounting data analytics. 
+I am a student in the Master of Professional Accountancy program at Mississippi State University, where I am also pursuing a graduate minor in accounting data analytics. Upon my graduation in May, I will begin my career with BKD as a Forensics and Valuation Services Consultant. 
