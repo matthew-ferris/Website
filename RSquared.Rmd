@@ -5,6 +5,10 @@ date: "11/26/2021"
 output: 
   distill::distill_article
 ---
+```{r}
+library(xaringanExtra)
+```
+
 
 ```{r xaringan-panelset, echo=FALSE}
 xaringanExtra::use_panelset()
