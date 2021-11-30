@@ -2494,36 +2494,8 @@ Projects
 
 <span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>knn_fit</span>,<span class='va'>DataTest</span><span class='op'>)</span>
 <span class='va'>ConfusionMatrix</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>DataTest</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>ConfusionMatrix</span>
 </code></pre>
 </div>
-<pre><code>Confusion Matrix and Statistics
-
-          Reference
-Prediction    No   Yes
-       No  14119   193
-       Yes  1270   623
-                                          
-               Accuracy : 0.9097          
-                 95% CI : (0.9052, 0.9141)
-    No Information Rate : 0.9496          
-    P-Value [Acc &gt; NIR] : 1               
-                                          
-                  Kappa : 0.4191          
-                                          
- Mcnemar&#39;s Test P-Value : &lt;2e-16          
-                                          
-            Sensitivity : 0.9175          
-            Specificity : 0.7635          
-         Pos Pred Value : 0.9865          
-         Neg Pred Value : 0.3291          
-             Prevalence : 0.9496          
-         Detection Rate : 0.8713          
-   Detection Prevalence : 0.8832          
-      Balanced Accuracy : 0.8405          
-                                          
-       &#39;Positive&#39; Class : No              
-                                          </code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2539,7 +2511,7 @@ Prediction    No   Yes
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

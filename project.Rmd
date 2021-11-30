@@ -14,6 +14,8 @@ library(tidyverse)
 library(corrplot)
 library(stringr)
 library(RANN)
+library(xaringan)
+library(xaringanExtra)
 
 draw_confusion_matrix <- function(cm) {
  
@@ -157,7 +159,6 @@ knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY
 
 knn_pred<-predict(knn_fit,DataTest)
 ConfusionMatrix<-confusionMatrix(knn_pred,as.factor(DataTest$GOING_CONCERN))
-ConfusionMatrix
 ```
 
 ``` {r}
