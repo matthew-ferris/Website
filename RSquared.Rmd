@@ -12,20 +12,23 @@ xaringanExtra::use_panelset()
 xaringanExtra::style_panelset_tabs()
 ```
 
-.panelset[
-.panel[.panel-name[app.R]
+::::: {.panelset}
 
-```r
-hist(runif(100))
-```
-]
+::: {.panel}
+[First Tab]{.panel-name}
 
-.panel[.panel-name[About]
+Lorem sed non habitasse nulla donec egestas magna
+enim posuere fames ante diam!
+:::
 
-Take a look at the R code in that other panel.
-]
-]
+::: {.panel}
+[Second Tab]{.panel-name}
 
+Consectetur ligula taciti neque scelerisque gravida
+class pharetra netus lobortis quisque mollis iaculis.
+:::
+
+:::::
 R-squared does not necessarily measure goodness of fit. It can be arbitrarily low when the model is completely correct. By making $σ^2$ large, we drive R-squared towards 0, even when every assumption of the simple linear regression model is correct in every particular.
 
 What is $σ^2$? When we perform linear regression, we assume our model almost predicts our dependent variable. The difference between “almost” and “exact” is assumed to be a draw from a Normal distribution with mean 0 and some variance, which we call $σ^2$.

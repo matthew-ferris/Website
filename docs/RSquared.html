@@ -2422,11 +2422,16 @@ Projects
 </code></pre>
 </div>
 </div>
-<p>.panelset[ .panel[.panel-name[app.R]</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">runif</span>(<span class="dv">100</span>))</span></code></pre></div>
-<p>]</p>
-<p>.panel[.panel-name[About]</p>
-<p>Take a look at the R code in that other panel. ] ]</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">First Tab</span></p>
+<p>Lorem sed non habitasse nulla donec egestas magna enim posuere fames ante diam!</p>
+</div>
+<div class="panel">
+<p><span class="panel-name">Second Tab</span></p>
+<p>Consectetur ligula taciti neque scelerisque gravida class pharetra netus lobortis quisque mollis iaculis.</p>
+</div>
+</div>
 <p>R-squared does not necessarily measure goodness of fit. It can be arbitrarily low when the model is completely correct. By making <span class="math inline">\(σ^2\)</span> large, we drive R-squared towards 0, even when every assumption of the simple linear regression model is correct in every particular.</p>
 <p>What is <span class="math inline">\(σ^2\)</span>? When we perform linear regression, we assume our model almost predicts our dependent variable. The difference between “almost” and “exact” is assumed to be a draw from a Normal distribution with mean 0 and some variance, which we call <span class="math inline">\(σ^2\)</span>.</p>
 <p>This can create a particular problem among data analytics. Models can be interpretted as being incorrect based off of a poor <span class="math inline">\(R^2\)</span> statistic, when in reality, the model fits in every regard.</p>
@@ -2450,7 +2455,7 @@ Projects
 <p><img src="RSquared_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
 </div>
 <p>R-squared tanks hard with increasing sigma, even though the model is completely correct in every respect. There are a few other measures that can be used instead of <span class="math inline">\(R^2\)</span> to measure the goodness of fit. The Root Mean Squared Error (RMSE), for example, can be used in its place. Or Specificity, Precision, Accuracy, or Recall.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
