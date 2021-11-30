@@ -2451,7 +2451,7 @@ Projects
 <p>First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
 <p>Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling.</p>
 <p>::: panelset ::: panel</p>
-<p>[Regular]</p>
+<p><span class="panel-name">Regular</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
@@ -2475,7 +2475,7 @@ Projects
 </div>
 <p>:::</p>
 <div class="panel">
-<p>[SMOTE Sampling]</p>
+<p><span class="panel-name">SMOTE Sampling</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
@@ -2501,29 +2501,29 @@ Projects
 
           Reference
 Prediction    No   Yes
-       No  14035   192
-       Yes  1354   624
-                                       
-               Accuracy : 0.9046       
-                 95% CI : (0.9, 0.9091)
-    No Information Rate : 0.9496       
-    P-Value [Acc &gt; NIR] : 1            
-                                       
-                  Kappa : 0.4042       
-                                       
- Mcnemar&#39;s Test P-Value : &lt;2e-16       
-                                       
-            Sensitivity : 0.9120       
-            Specificity : 0.7647       
-         Pos Pred Value : 0.9865       
-         Neg Pred Value : 0.3155       
-             Prevalence : 0.9496       
-         Detection Rate : 0.8661       
-   Detection Prevalence : 0.8779       
-      Balanced Accuracy : 0.8384       
-                                       
-       &#39;Positive&#39; Class : No           
-                                       </code></pre>
+       No  14119   193
+       Yes  1270   623
+                                          
+               Accuracy : 0.9097          
+                 95% CI : (0.9052, 0.9141)
+    No Information Rate : 0.9496          
+    P-Value [Acc &gt; NIR] : 1               
+                                          
+                  Kappa : 0.4191          
+                                          
+ Mcnemar&#39;s Test P-Value : &lt;2e-16          
+                                          
+            Sensitivity : 0.9175          
+            Specificity : 0.7635          
+         Pos Pred Value : 0.9865          
+         Neg Pred Value : 0.3291          
+             Prevalence : 0.9496          
+         Detection Rate : 0.8713          
+   Detection Prevalence : 0.8832          
+      Balanced Accuracy : 0.8405          
+                                          
+       &#39;Positive&#39; Class : No              
+                                          </code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">

@@ -113,7 +113,7 @@ Due to the data being unbalanced, I have run two models with KNN. The first is t
 ::: panelset
 ::: panel
 
-[Regular]
+[Regular]{.panel-name}
 
 ```{r Knn Classification pt 1,message=FALSE,warning=FALSE}
 #split the test/train data
@@ -138,7 +138,7 @@ draw_confusion_matrix(ConfusionMatrix)
 :::
 
 ::: panel
-[SMOTE Sampling]
+[SMOTE Sampling]{.panel-name}
 
 ```{r Knn Classification pt 2 SMOTE,message=FALSE,warning=FALSE}
 #split the test/train data
