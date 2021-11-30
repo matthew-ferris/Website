@@ -115,8 +115,9 @@ First, I will need to partition the data into two different sets: the first as a
 
 Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling. 
 
-::: panelset
-::: panel
+::::: {.panelset}
+
+::: {.panel}
 [Regular]{.panel-name}
 
 ```{r Knn Classification pt 1,message=FALSE,warning=FALSE}
@@ -141,7 +142,7 @@ draw_confusion_matrix(ConfusionMatrix)
 ```
 :::
 
-::: panel
+::: {.panel}
 [SMOTE Sampling]{.panel-name}
 
 ```{r Knn Classification pt 2 SMOTE,message=FALSE,warning=FALSE}
@@ -168,6 +169,8 @@ draw_confusion_matrix(ConfusionMatrix)
 ```
 
 :::
+
+:::::
 
 We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is not the greatest. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
 
