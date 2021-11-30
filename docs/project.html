@@ -2416,7 +2416,7 @@ Projects
 </code></pre>
 </div>
 <pre><code>
-    0     1 
+   No   Yes 
 50313  6473 </code></pre>
 </div>
 <p>You can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion.</p>
@@ -2442,34 +2442,30 @@ Projects
 </code></pre>
 </div>
 <pre><code>
-    0     1 
+   No   Yes 
 38474  2042 </code></pre>
 </div>
 <p>The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <p><strong>Note: Do I need to over-sample? Such as using SMOTE or a similar function?</strong></p>
 <p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company’s auditor. The algorithm does this by measuring the distance between the “test data,” which is what we are trying to predict, and the “training data.” The model then makes a prediction based on the nearest data points in the training data.</p>
 <p>First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
+<p>Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling.</p>
+<p>::: panelset ::: panel</p>
+<p>[Regular]</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
-<span class='va'>trainIndex</span> <span class='op'>&lt;-</span> <span class='fu'>createDataPartition</span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span>, p <span class='op'>=</span> <span class='fl'>.5</span>, list <span class='op'>=</span> <span class='cn'>FALSE</span>, times <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>trainIndex</span> <span class='op'>&lt;-</span> <span class='fu'>createDataPartition</span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>Data</span><span class='op'>[</span>,<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"GOING_CONCERN"</span><span class='op'>]</span>, p <span class='op'>=</span> <span class='fl'>.6</span>, list <span class='op'>=</span> <span class='cn'>FALSE</span>, times <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='co'>#grab the data</span>
 <span class='va'>DataTrain</span> <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span> <span class='va'>trainIndex</span>,<span class='op'>]</span>
 <span class='va'>DataTest</span>  <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span><span class='op'>-</span><span class='va'>trainIndex</span>,<span class='op'>]</span>
 
-<span class='va'>preProcValues</span> <span class='op'>&lt;-</span> <span class='fu'>preProcess</span><span class='op'>(</span><span class='va'>DataTrain</span>, method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"center"</span>, <span class='st'>"scale"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>trainTransformed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>preProcValues</span>, <span class='va'>DataTrain</span><span class='op'>)</span>
-
-<span class='va'>preProcValues</span> <span class='op'>&lt;-</span> <span class='fu'>preProcess</span><span class='op'>(</span><span class='va'>DataTest</span>, method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"center"</span>, <span class='st'>"scale"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>testTransformed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>preProcValues</span>, <span class='va'>DataTest</span><span class='op'>)</span>
-
 <span class='va'>knn_fit</span><span class='op'>&lt;-</span><span class='fu'>train</span><span class='op'>(</span><span class='va'>GOING_CONCERN</span><span class='op'>~</span><span class='va'>MATCHFY_BALSH_ASSETS</span><span class='op'>+</span><span class='va'>MATCHFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_CHANGE_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_OP_ACT_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>PRIORFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>CIK_Code</span>,
-               data<span class='op'>=</span><span class='va'>trainTransformed</span>,
-               method<span class='op'>=</span><span class='st'>"knn"</span>,
-               tuneGrid<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>k<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
+               data<span class='op'>=</span><span class='va'>DataTrain</span>,
+               method<span class='op'>=</span><span class='st'>"knn"</span><span class='op'>)</span>
 
-<span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>knn_fit</span>,<span class='va'>testTransformed</span><span class='op'>)</span>
-<span class='va'>ConfusionMatrix</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='va'>testTransformed</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
+<span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>knn_fit</span>,<span class='va'>DataTest</span><span class='op'>)</span>
+<span class='va'>ConfusionMatrix</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>DataTest</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2477,41 +2473,71 @@ Projects
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="project_files/figure-html5/Confusion%20Matrix%20Table-1.png" width="624" /></p>
 </div>
-<p>And here are some more specific statistics:</p>
+<p>:::</p>
+<div class="panel">
+<p>[SMOTE Sampling]</p>
 <div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
+<span class='va'>trainIndex</span> <span class='op'>&lt;-</span> <span class='fu'>createDataPartition</span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>Data</span><span class='op'>[</span>,<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"GOING_CONCERN"</span><span class='op'>]</span>, p <span class='op'>=</span> <span class='fl'>.6</span>, list <span class='op'>=</span> <span class='cn'>FALSE</span>, times <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='co'>#grab the data</span>
+<span class='va'>DataTrain</span> <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span> <span class='va'>trainIndex</span>,<span class='op'>]</span>
+<span class='va'>DataTest</span>  <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span><span class='op'>-</span><span class='va'>trainIndex</span>,<span class='op'>]</span>
+
+<span class='va'>knn_fit</span><span class='op'>&lt;-</span><span class='fu'>train</span><span class='op'>(</span><span class='va'>GOING_CONCERN</span><span class='op'>~</span><span class='va'>MATCHFY_BALSH_ASSETS</span><span class='op'>+</span><span class='va'>MATCHFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_CHANGE_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_OP_ACT_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>PRIORFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>CIK_Code</span>,
+               data<span class='op'>=</span><span class='va'>DataTrain</span>,
+               trControl <span class='op'>=</span> <span class='fu'>trainControl</span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"cv"</span>,
+                           number <span class='op'>=</span> <span class='fl'>10</span>,
+                           classProbs <span class='op'>=</span> <span class='cn'>TRUE</span>,
+                           sampling <span class='op'>=</span> <span class='st'>"smote"</span><span class='op'>)</span>,
+               method<span class='op'>=</span><span class='st'>"knn"</span><span class='op'>)</span>
+
+<span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>knn_fit</span>,<span class='va'>DataTest</span><span class='op'>)</span>
+<span class='va'>ConfusionMatrix</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>DataTest</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>ConfusionMatrix</span>
+</code></pre>
+</div>
 <pre><code>Confusion Matrix and Statistics
 
           Reference
-Prediction     0     1
-         0 18960   892
-         1   277   129
-                                         
-               Accuracy : 0.9423         
-                 95% CI : (0.939, 0.9455)
-    No Information Rate : 0.9496         
-    P-Value [Acc &gt; NIR] : 1              
-                                         
-                  Kappa : 0.1566         
-                                         
- Mcnemar&#39;s Test P-Value : &lt;2e-16         
-                                         
-            Sensitivity : 0.9856         
-            Specificity : 0.1263         
-         Pos Pred Value : 0.9551         
-         Neg Pred Value : 0.3177         
-             Prevalence : 0.9496         
-         Detection Rate : 0.9359         
-   Detection Prevalence : 0.9800         
-      Balanced Accuracy : 0.5560         
-                                         
-       &#39;Positive&#39; Class : 0              
-                                         </code></pre>
+Prediction    No   Yes
+       No  14035   192
+       Yes  1354   624
+                                       
+               Accuracy : 0.9046       
+                 95% CI : (0.9, 0.9091)
+    No Information Rate : 0.9496       
+    P-Value [Acc &gt; NIR] : 1            
+                                       
+                  Kappa : 0.4042       
+                                       
+ Mcnemar&#39;s Test P-Value : &lt;2e-16       
+                                       
+            Sensitivity : 0.9120       
+            Specificity : 0.7647       
+         Pos Pred Value : 0.9865       
+         Neg Pred Value : 0.3155       
+             Prevalence : 0.9496       
+         Detection Rate : 0.8661       
+   Detection Prevalence : 0.8779       
+      Balanced Accuracy : 0.8384       
+                                       
+       &#39;Positive&#39; Class : No           
+                                       </code></pre>
 </div>
-<p>We can see that this model did not perform <em>spectacularly</em>. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>draw_confusion_matrix</span><span class='op'>(</span><span class='va'>ConfusionMatrix</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="project_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
+</div>
+</div>
+<p>We can see that this model did not perform <em>spectacularly</em>. Although there are high accuracy and sensitivity statistics, the specificity statistic is not the greatest. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued.</p>
 <p>However, this model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion.</p>
 <p>The following plot illustrates the variables that the model deemed as the most important. Balance sheet assets, cash flows from operating activities, balance sheet book value, net income, and total audit fees were the most important variables used.</p>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="project_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
+
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->

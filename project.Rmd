@@ -172,6 +172,6 @@ However, this model could be used to help identify those companies that are more
 
 The following plot illustrates the variables that the model deemed as the most important. Balance sheet assets, cash flows from operating activities, balance sheet book value, net income, and total audit fees were the most important variables used. 
 
-```{r, echo=FALSE, include=TRUE}
+```{r, echo=FALSE, include=TRUE, eval=FALSE}
 plot(varImp(knn_fit),top = 9,main = "Importance of Variables")
 ```
