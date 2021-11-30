@@ -7,11 +7,9 @@ output:
 ---
 ```{r}
 library(xaringanExtra)
-```
 
-
-```{r xaringan-panelset, echo=FALSE}
 xaringanExtra::use_panelset()
+xaringanExtra::style_panelset_tabs()
 ```
 
 .panelset[
