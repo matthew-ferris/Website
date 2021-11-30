@@ -2452,8 +2452,7 @@ Projects
 <p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company’s auditor. The algorithm does this by measuring the distance between the “test data,” which is what we are trying to predict, and the “training data.” The model then makes a prediction based on the nearest data points in the training data.</p>
 <p>First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
 <p>Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling.</p>
-<p>::: panelset ::: panel</p>
-<p><span class="panel-name">Regular</span></p>
+<p>::: panelset ::: panel <span class="panel-name">Regular</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#split the test/train data</span>
