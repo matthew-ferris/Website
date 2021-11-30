@@ -14,6 +14,52 @@ library(tidyverse)
 library(corrplot)
 library(stringr)
 library(RANN)
+
+draw_confusion_matrix <- function(cm) {
+ 
+  layout(matrix(c(1,1,2)))
+  par(mar=c(2,2,2,2))
+  plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
+  title('CONFUSION MATRIX', cex.main=2)
+ 
+  # create the matrix
+  rect(150, 430, 240, 370, col='#3F97D0')
+  text(195, 435, 'Class1', cex=1.2)
+  rect(250, 430, 340, 370, col='#F7AD50')
+  text(295, 435, 'Class2', cex=1.2)
+  text(125, 370, 'Predicted', cex=1.3, srt=90, font=2)
+  text(245, 450, 'Actual', cex=1.3, font=2)
+  rect(150, 305, 240, 365, col='#F7AD50')
+  rect(250, 305, 340, 365, col='#3F97D0')
+  text(140, 400, 'Class1', cex=1.2, srt=90)
+  text(140, 335, 'Class2', cex=1.2, srt=90)
+ 
+  # add in the cm results
+  res <- as.numeric(cm$table)
+  text(195, 400, res[1], cex=1.6, font=2, col='white')
+  text(195, 335, res[2], cex=1.6, font=2, col='white')
+  text(295, 400, res[3], cex=1.6, font=2, col='white')
+  text(295, 335, res[4], cex=1.6, font=2, col='white')
+ 
+  # add in the specifics
+  plot(c(100, 0), c(100, 0), type = "n", xlab="", ylab="", main = "DETAILS", xaxt='n', yaxt='n')
+  text(10, 85, names(cm$byClass[1]), cex=1.2, font=2)
+  text(10, 70, round(as.numeric(cm$byClass[1]), 3), cex=1.2)
+  text(30, 85, names(cm$byClass[2]), cex=1.2, font=2)
+  text(30, 70, round(as.numeric(cm$byClass[2]), 3), cex=1.2)
+  text(50, 85, names(cm$byClass[5]), cex=1.2, font=2)
+  text(50, 70, round(as.numeric(cm$byClass[5]), 3), cex=1.2)
+  text(70, 85, names(cm$byClass[6]), cex=1.2, font=2)
+  text(70, 70, round(as.numeric(cm$byClass[6]), 3), cex=1.2)
+  text(90, 85, names(cm$byClass[7]), cex=1.2, font=2)
+  text(90, 70, round(as.numeric(cm$byClass[7]), 3), cex=1.2)
+ 
+  # add in the accuracy information
+  text(30, 35, names(cm$overall[1]), cex=1.5, font=2)
+  text(30, 20, round(as.numeric(cm$overall[1]), 3), cex=1.4)
+  text(70, 35, names(cm$overall[2]), cex=1.5, font=2)
+  text(70, 20, round(as.numeric(cm$overall[2]), 3), cex=1.4)
+} 
 ```
 
 ```{r Load Data, message=FALSE, include=FALSE, warning=FALSE,echo=FALSE}
@@ -22,6 +68,8 @@ setwd("~/Desktop/Analytics/Website")
 Data<-read.csv("Data.csv",na.strings = ".")
 attach(Data)
 Data$GOING_CONCERN<-as.factor(Data$GOING_CONCERN)
+Data$GOING_CONCERN<-ifelse(Data$GOING_CONCERN=="1","Yes","No")
+
 ```
 
 Using data obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
@@ -60,48 +108,65 @@ To use machine learning to make the prediction of whether a Going Concern will b
 
 First, I will need to partition the data into two different sets: the first as a "training" set, which 'trains' the algorithm, and the second as a "testing" set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix. 
 
-```{r Knn Classification,message=FALSE,warning=FALSE}
+Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling. 
+
+::: panelset
+::: panel
+
+[Regular]
+
+```{r Knn Classification pt 1,message=FALSE,warning=FALSE}
 #split the test/train data
-trainIndex <- createDataPartition(Data$GOING_CONCERN, p = .5, list = FALSE, times = 1)
+trainIndex <- createDataPartition(y = Data[,names(Data) == "GOING_CONCERN"], p = .6, list = FALSE, times = 1)
 #grab the data
 DataTrain <- Data[ trainIndex,]
 DataTest  <- Data[-trainIndex,]
 
-preProcValues <- preProcess(DataTrain, method = c("center", "scale"))
-trainTransformed <- predict(preProcValues, DataTrain)
-
-preProcValues <- preProcess(DataTest, method = c("center", "scale"))
-testTransformed <- predict(preProcValues, DataTest)
-
 knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
-               data=trainTransformed,
-               method="knn",
-               tuneGrid=data.frame(k=4))
+               data=DataTrain,
+               method="knn")
 
-knn_pred<-predict(knn_fit,testTransformed)
-ConfusionMatrix<-confusionMatrix(knn_pred,testTransformed$GOING_CONCERN)
+knn_pred<-predict(knn_fit,DataTest)
+ConfusionMatrix<-confusionMatrix(knn_pred,as.factor(DataTest$GOING_CONCERN))
 ```
 
 Here is a quick glance at what the model predicted vs. what actually occurred: 
 
 ```{r Confusion Matrix Table, echo=FALSE}
-ggplot(as.data.frame(ConfusionMatrix$table))+
-  geom_raster(aes(x=Reference, y=Prediction, fill=Freq))+
-  geom_text(aes(x=Reference, y=Prediction, label=Freq))+
-  scale_fill_gradient(low = "palegreen", high = "palegreen4", na.value = "black", name="Frequency")+
-  scale_x_discrete(name="Actual Class")+
-  scale_y_discrete(name = "Predicted Class")+
-  ggtitle("Confusion Matrix")+
-  theme(plot.title = element_text(hjust = 0.5, size = 10, face = 'bold'))
+draw_confusion_matrix(ConfusionMatrix)
 ```
+:::
 
-And here are some more specific statistics: 
+::: panel
+[SMOTE Sampling]
 
-```{r confusion matrix stats, echo=FALSE, include=TRUE}
+```{r Knn Classification pt 2 SMOTE,message=FALSE,warning=FALSE}
+#split the test/train data
+trainIndex <- createDataPartition(y = Data[,names(Data) == "GOING_CONCERN"], p = .6, list = FALSE, times = 1)
+#grab the data
+DataTrain <- Data[ trainIndex,]
+DataTest  <- Data[-trainIndex,]
+
+knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
+               data=DataTrain,
+               trControl = trainControl(method = "cv",
+                           number = 10,
+                           classProbs = TRUE,
+                           sampling = "smote"),
+               method="knn")
+
+knn_pred<-predict(knn_fit,DataTest)
+ConfusionMatrix<-confusionMatrix(knn_pred,as.factor(DataTest$GOING_CONCERN))
 ConfusionMatrix
 ```
 
-We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is abysmal. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
+``` {r}
+draw_confusion_matrix(ConfusionMatrix)
+```
+
+:::
+
+We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is not the greatest. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
 
 However, this model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. 
 
@@ -110,18 +175,3 @@ The following plot illustrates the variables that the model deemed as the most i
 ```{r, echo=FALSE, include=TRUE}
 plot(varImp(knn_fit),top = 9,main = "Importance of Variables")
 ```
-
-
-```{r cluster analysis,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
-#cluster
-#trainTransformed<-subset(trainTransformed,select = -c(AUDITOR_STATE))
-Clusters<-kmeans(trainTransformed,centers=4)
-Clusterdata<-trainTransformed
-Clusterdata$Cluster<-as.factor(Clusters$cluster)
-
-ggplot(data=Clusterdata,mapping = aes(x=MATCHFY_CSHFLST_OP_ACT_TTM,y=MATCHFY_INCMST_NETINC_TTM,color=Cluster))+geom_point(alpha=0.5)
-
-ggplot(data=Clusterdata,mapping = aes(x=MATCHFY_CSHFLST_OP_ACT_TTM,y=MATCHFY_INCMST_NETINC_TTM,color=Cluster))+geom_point(alpha=0.5)+facet_wrap(~GOING_CONCERN)
-```
-
-
