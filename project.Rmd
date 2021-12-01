@@ -80,6 +80,8 @@ Data$GOING_CONCERN<-ifelse(Data$GOING_CONCERN=="1","Yes","No")
 
 ## Purpose
 
+asdf
+
 Using data obtained through Dr. France at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data has observations for the outcomes of audits for companies, the financial statement statistics from the companies, and the audit fees. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
 
 ## Getting Started & Descriptive Statistics
