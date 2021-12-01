@@ -11,7 +11,7 @@ header-includes:
 - \usepackage{booktabs}
 - \usepackage{sectsty} \sectionfont{\centering}
 ---
-### **EDUCATION**
+## **EDUCATION**
 
 **Master of Professional Accountancy, Minor in Accounting Data
 Analytics**\
@@ -23,7 +23,7 @@ Adkerson School of Accountancy, Mississippi State University,
 Starkville, Mississippi. May 2021.
 
 
-### **EXPERIENCE**
+## **EXPERIENCE**
 
 **Graduate Assistant,** May 2021 - Current\
 Bagley College of Engineering, Starkville, Mississippi.\
@@ -53,7 +53,7 @@ FDIC regulations and guidelines.\
 - Communicated effectively in a virtual environment with examination
 team members.\
 
-### **ACTIVITIES AND HONORS** \ 
+## **ACTIVITIES AND HONORS** \ 
 **American Institute for Certified Public Accountants** \
 -   Student Affiliate, September 2018 - Present \
 **Habitat for Humanity Campus Chapter** \
@@ -64,7 +64,7 @@ team members.\
 -   Service Ministry Representative, August 2019 - December 2019 \
     
 
-### **SKILLS**
+## **SKILLS**
 Proficient in Microsoft Office Suite (Word, Excel,
 Access, and PowerPoint)\
 Proficient in the R programming language and the
