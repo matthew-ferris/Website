@@ -80,8 +80,6 @@ Data$GOING_CONCERN<-ifelse(Data$GOING_CONCERN=="1","Yes","No")
 
 ## Purpose
 
-asdf
-
 Using data obtained through Dr. France at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data has observations for the outcomes of audits for companies, the financial statement statistics from the companies, and the audit fees. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
 
 ## Getting Started & Descriptive Statistics
@@ -92,8 +90,13 @@ To get started, I wanted to see the distribution of the dependent variable, whic
 <aside>
 ```{r Dependent Variable Distribution Pt. 1, echo=TRUE}
 table(Data$GOING_CONCERN)
-```
 
+sum(is.na(Data))/prod(dim(Data))
+
+Data<-na.omit(Data)
+
+table(Data$GOING_CONCERN)
+```
 </aside>  
 
 
@@ -101,30 +104,7 @@ You can see that the distribution is very heavily skewed. Of the nearly 56,000 o
 
 After reviewing the dataset some more, I noticed that there were a relatively large amount of NAs in the observations. Using this formula, you can see the percentage of the data that is NA. 
 
-<aside>
-```{r How much NA?, echo=TRUE}
-sum(is.na(Data))/prod(dim(Data))
-```
-
-<aside>
-
-Roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make "estimates" of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. 
-
-<aside>
-```{r Remove NAs, echo=TRUE}
-Data<-na.omit(Data)
-```
-
-<aside>
-
-After omitting the NAs, I wanted to see the new distribution of the dependent variable. 
-
-<aside>
-```{r Dependent Variable Distribution Pt. 2, echo=TRUE}
-table(Data$GOING_CONCERN)
-```
-
-<aside>
+Roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make "estimates" of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. After omitting the NAs, I ran the "table" funtion again to see the new distribution of the dependent variable without the NAs. 
 
 The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.
 

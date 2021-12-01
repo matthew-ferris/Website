@@ -2423,7 +2423,6 @@ Projects
 </nav>
 </div>
 <h2 id="purpose">Purpose</h2>
-<p>asdf</p>
 <p>Using data obtained through Dr. France at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data has observations for the outcomes of audits for companies, the financial statement statistics from the companies, and the audit fees. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.</p>
 <h2 id="getting-started-descriptive-statistics">Getting Started &amp; Descriptive Statistics</h2>
 <p>To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute.</p>
@@ -2436,40 +2435,25 @@ Projects
 <pre><code>
    No   Yes 
 50313  6473 </code></pre>
-</div>
-</aside>
-<p>You can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion.</p>
-<p>After reviewing the dataset some more, I noticed that there were a relatively large amount of NAs in the observations. Using this formula, you can see the percentage of the data that is NA.</p>
-<aside>
-<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 <pre><code>[1] 0.1054775</code></pre>
-</div>
-<aside>
-<p>Roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make “estimates” of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data.</p>
-<aside>
-<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>Data</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span>
-</code></pre>
-</div>
-</div>
-<aside>
-<p>After omitting the NAs, I wanted to see the new distribution of the dependent variable.</p>
-<aside>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
 </code></pre>
 </div>
 <pre><code>
    No   Yes 
 38474  2042 </code></pre>
 </div>
-<aside>
+</aside>
+<p>You can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion.</p>
+<p>After reviewing the dataset some more, I noticed that there were a relatively large amount of NAs in the observations. Using this formula, you can see the percentage of the data that is NA.</p>
+<p>Roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make “estimates” of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. After omitting the NAs, I ran the “table” funtion again to see the new distribution of the dependent variable without the NAs.</p>
 <p>The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <h2 id="making-predictions">Making Predictions</h2>
 <p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company’s auditor. The algorithm does this by measuring the distance between the “test data,” which is what we are trying to predict, and the “training data.” The model then makes a prediction based on the nearest data points in the training data.</p>
