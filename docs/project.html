@@ -2415,16 +2415,18 @@ Projects
 <h3>Contents</h3>
 <ul>
 <li><a href="#purpose">Purpose</a></li>
-<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#getting-started-descriptive-statistics">Getting Started &amp; Descriptive Statistics</a></li>
 <li><a href="#making-predictions">Making Predictions</a></li>
 <li><a href="#the-results">The Results</a></li>
+<li><a href="#how-can-this-be-useful">How can this be useful?</a></li>
 </ul>
 </nav>
 </div>
 <h2 id="purpose">Purpose</h2>
-<p>Using data obtained through Dr. France at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.</p>
-<h2 id="getting-started">Getting Started</h2>
+<p>Using data obtained through Dr. France at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data has observations for the outcomes of audits for companies, the financial statement statistics from the companies, and the audit fees. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.</p>
+<h2 id="getting-started-descriptive-statistics">Getting Started &amp; Descriptive Statistics</h2>
 <p>To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute.</p>
+<aside>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
@@ -2434,8 +2436,10 @@ Projects
    No   Yes 
 50313  6473 </code></pre>
 </div>
+</aside>
 <p>You can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion.</p>
 <p>After reviewing the dataset some more, I noticed that there were a relatively large amount of NAs in the observations. Using this formula, you can see the percentage of the data that is NA.</p>
+<aside>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>
@@ -2443,14 +2447,18 @@ Projects
 </div>
 <pre><code>[1] 0.1054775</code></pre>
 </div>
+<aside>
 <p>Roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make “estimates” of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data.</p>
+<aside>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>Data</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
+<aside>
 <p>After omitting the NAs, I wanted to see the new distribution of the dependent variable.</p>
+<aside>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
@@ -2460,11 +2468,12 @@ Projects
    No   Yes 
 38474  2042 </code></pre>
 </div>
+<aside>
 <p>The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <h2 id="making-predictions">Making Predictions</h2>
 <p>To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company’s auditor. The algorithm does this by measuring the distance between the “test data,” which is what we are trying to predict, and the “training data.” The model then makes a prediction based on the nearest data points in the training data.</p>
 <p>First, I will need to partition the data into two different sets: the first as a “training” set, which ‘trains’ the algorithm, and the second as a “testing” set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix.</p>
-<p>Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling. You can click through the two tabs below to see each of the models.</p>
+<p>Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling. You can click through the two tabs below to see the code for each of the models.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">Regular</span></p>
@@ -2476,11 +2485,15 @@ Projects
 <span class='va'>DataTrain</span> <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span> <span class='va'>trainIndex</span>,<span class='op'>]</span>
 <span class='va'>DataTest</span>  <span class='op'>&lt;-</span> <span class='va'>Data</span><span class='op'>[</span><span class='op'>-</span><span class='va'>trainIndex</span>,<span class='op'>]</span>
 
+<span class='co'>#train the model </span>
 <span class='va'>KNN</span><span class='op'>&lt;-</span><span class='fu'>train</span><span class='op'>(</span><span class='va'>GOING_CONCERN</span><span class='op'>~</span><span class='va'>MATCHFY_BALSH_ASSETS</span><span class='op'>+</span><span class='va'>MATCHFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_CHANGE_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_OP_ACT_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>PRIORFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>CIK_Code</span>,
                data<span class='op'>=</span><span class='va'>DataTrain</span>,
                method<span class='op'>=</span><span class='st'>"knn"</span><span class='op'>)</span>
 
+<span class='co'>#make predictions of the test data based off of the model </span>
 <span class='va'>knn_pred</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>KNN</span>,<span class='va'>DataTest</span><span class='op'>)</span>
+
+<span class='co'>#compare the predictions to the actual</span>
 <span class='va'>ConfusionMatrix1</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred</span>,<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>DataTest</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2490,7 +2503,8 @@ Projects
 <p><span class="panel-name">SMOTE Sampling</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>KNN_SM</span><span class='op'>&lt;-</span><span class='fu'>train</span><span class='op'>(</span><span class='va'>GOING_CONCERN</span><span class='op'>~</span><span class='va'>MATCHFY_BALSH_ASSETS</span><span class='op'>+</span><span class='va'>MATCHFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_CHANGE_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_OP_ACT_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>PRIORFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>CIK_Code</span>,
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#train the model </span>
+<span class='va'>KNN_SM</span><span class='op'>&lt;-</span><span class='fu'>train</span><span class='op'>(</span><span class='va'>GOING_CONCERN</span><span class='op'>~</span><span class='va'>MATCHFY_BALSH_ASSETS</span><span class='op'>+</span><span class='va'>MATCHFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_CHANGE_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_CSHFLST_OP_ACT_TTM</span><span class='op'>+</span><span class='va'>MATCHFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_INCMST_NETINC_TTM</span><span class='op'>+</span><span class='va'>PRIORFY_BALSH_BOOK_VAL</span><span class='op'>+</span><span class='va'>MATCHFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>PRIORFY_SUM_AUDFEES</span><span class='op'>+</span><span class='va'>CIK_Code</span>,
                data<span class='op'>=</span><span class='va'>DataTrain</span>,
                trControl <span class='op'>=</span> <span class='fu'>trainControl</span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"cv"</span>,
                            number <span class='op'>=</span> <span class='fl'>10</span>,
@@ -2498,7 +2512,10 @@ Projects
                            sampling <span class='op'>=</span> <span class='st'>"smote"</span><span class='op'>)</span>,
                method<span class='op'>=</span><span class='st'>"knn"</span><span class='op'>)</span>
 
+<span class='co'>#make predictions of the test data based off of the model </span>
 <span class='va'>knn_pred_sm</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>KNN_SM</span>,<span class='va'>DataTest</span><span class='op'>)</span>
+
+<span class='co'>#compare the predictions to the actual</span>
 <span class='va'>ConfusionMatrix2</span><span class='op'>&lt;-</span><span class='fu'>confusionMatrix</span><span class='op'>(</span><span class='va'>knn_pred_sm</span>,<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>DataTest</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2507,13 +2524,25 @@ Projects
 </div>
 <h2 id="the-results">The Results</h2>
 <p>The table below displays what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">Regular</span></p>
 <div class="layout-chunk" data-layout="l-body">
+<p><img src="project_files/figure-html5/CM1-1.png" width="624" /></p>
 <pre><code>NULL</code></pre>
+</div>
+</div>
+<div class="panel">
+<p><span class="panel-name">SMOTE</span></p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="project_files/figure-html5/CM2-1.png" width="624" /></p>
 <pre><code>NULL</code></pre>
-<p><img src="project_files/figure-html5/unnamed-chunk-1-1.png" width="50%" /><img src="project_files/figure-html5/unnamed-chunk-1-2.png" width="50%" /></p>
+</div>
+</div>
 </div>
 <p>The accuracy, precision, and recall statistics for the first model are <em>spectacular</em>. However, the specificity statistic is not so great. The Confusion Matrix shows that a rather large number of <strong>actual</strong> Going Concern companies were predicted to be fine.</p>
 <p>Using SMOTE sampling, the sensitivity, recall, and kappa statistics dropped by a relatively insignificant amount. The specificity statistic is much higher, though. The Confusion Matrix for this model shows that a much higher amount of the <strong>actual</strong> Going Concern companies were predicted by the model. However, the model also predicted a much higher amount of non-Going Concern companies to have that issue.</p>
+<h2 id="how-can-this-be-useful">How can this be useful?</h2>
 <p>This model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. Using the SMOTE model, an auditor can identify those companies that have a much higher likelihood of having a Going Concern issue. However, there could be a lack of efficiency due to the model identifying a decent amount of non-Going Concern companies.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
