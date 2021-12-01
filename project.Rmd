@@ -6,7 +6,7 @@ output:
   distill::distill_article
 ---
 
-```{r Load Libraries,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
+```{r Load Libraries and stuffs,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE}
 library(lattice)
 library(ggplot2)
 library(caret)
@@ -77,7 +77,11 @@ Data$GOING_CONCERN<-ifelse(Data$GOING_CONCERN=="1","Yes","No")
 
 ```
 
-Using data obtained through Dr. Berglund at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
+## Purpose
+
+Using data obtained through Dr. France at Mississippi State University, I plan on using machine learning to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.  
+
+## Getting Started
 
 To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute. 
 
@@ -93,7 +97,7 @@ After reviewing the dataset some more, I noticed that there were a relatively la
 sum(is.na(Data))/prod(dim(Data))
 ```
 
-You can see that roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make "estimates" of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. 
+Roughly 10.5% of the cells are NA. There are a few ways to continue, such as different imputation techniques to make "estimates" of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. 
 
 ```{r Remove NAs, echo=TRUE}
 Data<-na.omit(Data)
@@ -107,13 +111,13 @@ table(Data$GOING_CONCERN)
 
 The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.
 
-**Note: Do I need to over-sample? Such as using SMOTE or a similar function?**
+## Making Predictions
 
 To use machine learning to make the prediction of whether a Going Concern will be issued, I will use K-Nearest Neighbors classification. In short, K-NN attempts to use independent variables to make a prediction of what the dependent variable will be. In this case, the algorithm will predict whether a Going Concern opinion was issued by the company's auditor. The algorithm does this by measuring the distance between the "test data," which is what we are trying to predict, and the "training data." The model then makes a prediction based on the nearest data points in the training data. 
 
 First, I will need to partition the data into two different sets: the first as a "training" set, which 'trains' the algorithm, and the second as a "testing" set, which will be used to test the fit of the model. Using the KNN method to make the predictions, I will then visualize the results in a confusion matrix. 
 
-Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling. 
+Due to the data being unbalanced, I have run two models with KNN. The first is the standard, while in the second I implement SMOTE sampling. You can click through the two tabs below to see each of the models.
 
 ::::: {.panelset}
 
@@ -127,15 +131,15 @@ trainIndex <- createDataPartition(y = Data[,names(Data) == "GOING_CONCERN"], p =
 DataTrain <- Data[ trainIndex,]
 DataTest  <- Data[-trainIndex,]
 
-knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
+KNN<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
                data=DataTrain,
                method="knn")
 
-knn_pred<-predict(knn_fit,DataTest)
+knn_pred<-predict(KNN,DataTest)
 ConfusionMatrix<-confusionMatrix(knn_pred,as.factor(DataTest$GOING_CONCERN))
 ```
 
-Here is a quick glance at what the model predicted vs. what actually occurred: 
+The table below displays what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite. 
 
 ```{r Confusion Matrix Table, echo=FALSE}
 draw_confusion_matrix(ConfusionMatrix)
@@ -146,13 +150,7 @@ draw_confusion_matrix(ConfusionMatrix)
 [SMOTE Sampling]{.panel-name}
 
 ```{r Knn Classification pt 2 SMOTE,message=FALSE,warning=FALSE}
-#split the test/train data
-trainIndex <- createDataPartition(y = Data[,names(Data) == "GOING_CONCERN"], p = .6, list = FALSE, times = 1)
-#grab the data
-DataTrain <- Data[ trainIndex,]
-DataTest  <- Data[-trainIndex,]
-
-knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
+KNN_SM<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY_CSHFLST_CHANGE_TTM+MATCHFY_CSHFLST_OP_ACT_TTM+MATCHFY_INCMST_NETINC_TTM+PRIORFY_INCMST_NETINC_TTM+PRIORFY_BALSH_BOOK_VAL+MATCHFY_SUM_AUDFEES+PRIORFY_SUM_AUDFEES+CIK_Code,
                data=DataTrain,
                trControl = trainControl(method = "cv",
                            number = 10,
@@ -160,9 +158,11 @@ knn_fit<-train(GOING_CONCERN~MATCHFY_BALSH_ASSETS+MATCHFY_BALSH_BOOK_VAL+MATCHFY
                            sampling = "smote"),
                method="knn")
 
-knn_pred<-predict(knn_fit,DataTest)
-ConfusionMatrix<-confusionMatrix(knn_pred,as.factor(DataTest$GOING_CONCERN))
+knn_pred_sm<-predict(KNN_SM,DataTest)
+ConfusionMatrix<-confusionMatrix(knn_pred_sm,as.factor(DataTest$GOING_CONCERN))
 ```
+
+The table below displays what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite. 
 
 ``` {r}
 draw_confusion_matrix(ConfusionMatrix)
@@ -172,12 +172,11 @@ draw_confusion_matrix(ConfusionMatrix)
 
 :::::
 
-We can see that this model did not perform *spectacularly*. Although there are high accuracy and sensitivity statistics, the specificity statistic is not the greatest. This is likely due to the data limitations and not having a direct correlation between the independent variables and the dependent variable. Other variables, even those that are not numerically measured, such as conversations with company personnel, have a large role in whether a Going Concern opinion is issued. 
+## The Results
 
-However, this model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. 
+The accuracy, precision, and recall statistics for the first model are *spectacular*. However, the specificity statistic is not so great. The Confusion Matrix shows that a rather large number of **actual** Going Concern companies were predicted to be fine. 
 
-The following plot illustrates the variables that the model deemed as the most important. Balance sheet assets, cash flows from operating activities, balance sheet book value, net income, and total audit fees were the most important variables used. 
+Using SMOTE sampling, the sensitivity, recall, and kappa statistics dropped by a relatively insignificant amount. The specificity statistic is much higher, though. The Confusion Matrix for this model shows that a much higher amount of the **actual** Going Concern companies were predicted by the model. However, the model also predicted a much higher amount of non-Going Concern companies to have that issue.
 
-```{r, echo=FALSE, include=TRUE, eval=FALSE}
-plot(varImp(knn_fit),top = 9,main = "Importance of Variables")
-```
+This model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. Using the SMOTE model, an auditor can identify those companies that have a much higher likelihood of having a Going Concern issue. However, there could be a lack of efficiency due to the model identifying a decent amount of non-Going Concern companies. 
+
