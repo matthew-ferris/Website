@@ -2418,24 +2418,28 @@ Projects
 <h2 id="purpose">Purpose</h2>
 <p>Using data obtained from professors at Mississippi State University, the purpose of this article is to utilize machine learning algorithms to classify the likelihood that a Going Concern opinion will be issued by an auditor. The data has observations for the outcomes of audits for companies, the financial statement statistics from the companies, and the audit fees. The data include attributes such as current and prior year cash flows, revenues, net income, shares outstanding, total assets, company book value, and total audit fees.</p>
 <h2 id="getting-started-descriptive-statistics">Getting Started &amp; Descriptive Statistics</h2>
-<p>To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute. In the code chunk below to the right, you can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion. There is also a relatively large amount of NAs in the observations: roughly 10.5% of the cells are NA. There are a few ways to continue, such as using different imputation techniques to make “estimates” of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. After omitting the NAs, I ran the “table” function again to see the new distribution of the dependent variable without the NAs. The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
+<p>To get started, I wanted to see the distribution of the dependent variable, which would be the Going Concern attribute. In the code chunk to the right, you can see that the distribution is very heavily skewed. Of the nearly 56,000 observations, just under 6,500 of them issued a Going Concern opinion. There is also a relatively large amount of NAs in the observations: roughly 10.5% of the cells are NA. There are a few ways to continue, such as using different imputation techniques to make “estimates” of what those empty cells should be. However, for the sake of not murdering my computer, I have elected to simply omit NAs from the data. After omitting the NAs, I ran the “table” function again to see the new distribution of the dependent variable without the NAs. The dataset has now been reduced from 56,000 observations to 40,500. Of those entries removed, a large percentage of them were those that had Going Concern opinions.</p>
 <aside>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#To see the distribution of dependent variable</span>
+<span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
 </code></pre>
 </div>
 <pre><code>
    No   Yes 
 50313  6473 </code></pre>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#To see the amount of NAs</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 <pre><code>[1] 0.1054775</code></pre>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>Data</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#To omit the NAs from the data</span>
+<span class='va'>Data</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span>
 
+<span class='co'>#To see the new distribution</span>
 <span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>$</span><span class='va'>GOING_CONCERN</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2498,7 +2502,7 @@ Projects
 </div>
 <h2 id="the-results">The Results</h2>
 <p>The tables below displays what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite.</p>
-<p>::::: {.panelset}</p>
+<div class="panelset">
 <div class="panel">
 <p><span class="panel-name">Regular</span></p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2511,6 +2515,7 @@ Projects
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="project_files/figure-html5/CM2-1.png" width="624" /></p>
 <pre><code>NULL</code></pre>
+</div>
 </div>
 </div>
 <p>The accuracy, precision, and recall statistics for the first model are <em>spectacular</em>. However, the specificity statistic is not so great. The Confusion Matrix shows that a rather large number of <strong>actual</strong> Going Concern companies were predicted to be fine.</p>
