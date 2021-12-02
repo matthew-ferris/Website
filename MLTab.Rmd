@@ -1,0 +1,218 @@
+---
+title: "Machine Learning"
+author: "Matt Ferris"
+date: "12/2/2021"
+output: html_document
+---
+
+```{r nn1}
+library(tidyverse)
+library(caret)
+
+set.seed(1)
+#lets split the data 60/40
+trainIndex <- createDataPartition(iris$Species, p = .6, list = FALSE, times = 1)
+#grab the data
+irisTrain <- iris[ trainIndex,]
+irisTest  <- iris[-trainIndex,]
+#added something here
+IrisNNET<- train(
+  form = factor(Species) ~ .,
+  data = irisTrain,
+  #here we add classProbs because we want probs
+  trControl = trainControl(method = "cv", number = 10,
+                           classProbs =  TRUE),
+  method = "nnet",
+  preProcess = c("center", "scale"),
+  tuneLength = 5,
+  #add this please
+  trace=FALSE)
+#IrisNNET
+knitr::kable(IrisNNET$bestTune)
+plot(IrisNNET)
+IrisNNET_Pred<-predict(IrisNNET,irisTest,type="prob")
+knitr::kable(IrisNNET_Pred)%>%
+  kableExtra::kable_styling("striped")%>%
+  kableExtra::scroll_box(width = "50%",height="300px")
+irisNNETtestpred<-cbind(IrisNNET_Pred,irisTest)
+irisNNETtestpred<-irisNNETtestpred%>%
+  mutate(prediction=if_else(setosa>versicolor & setosa>virginica,"setosa",
+                            if_else(versicolor>setosa & versicolor>virginica, "versicolor",
+                                    if_else(virginica>setosa & virginica>versicolor,"virginica", "PROBLEM"))))
+table(irisNNETtestpred$prediction)
+NNETConfusion<-confusionMatrix(factor(irisNNETtestpred$prediction),factor(irisNNETtestpred$Species))
+NNETConfusion
+```
+
+```{r nn2}
+ggplot(as.data.frame(NNETConfusion$table))+ 
+  geom_raster(aes(x=Reference, y=Prediction, fill=Freq)) + 
+  geom_text(aes(x=Reference, y=Prediction, label=Freq)) +
+   scale_fill_gradient2( low = "red", high = "darkred", na.value="black", name = "Freq" )+
+  scale_x_discrete(name="Actual Class") + 
+  scale_y_discrete(name="Predicted Class")+
+  ggtitle("Confusion is fun")+
+  theme(plot.title = element_text(hjust=0.5, size=10, face='bold'))
+```
+
+```{r nn3}
+#summary(IrisNNET)
+#had to add something 
+V<-as.data.frame(caret::varImp(IrisNNET)$importance)%>%
+  arrange(desc(Overall))
+knitr::kable(V)
+ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
+geom_point( color="blue", size=4, alpha=0.6)+
+geom_segment( aes(x=rownames(V), xend=rownames(V), y=0, yend=Overall), 
+color='skyblue') +
+xlab('Variable')+
+ylab('Overall Importance')+
+theme_light() +
+coord_flip() 
+```
+
+[NeuralNetTools](https://cran.r-project.org/web/packages/NeuralNetTools/NeuralNetTools.pdf)
+
+```{r nnplot}
+#install.packages("NeuralNetTools")
+NeuralNetTools::garson(IrisNNET)
+NeuralNetTools::olden(IrisNNET)
+NeuralNetTools::plotnet(IrisNNET)
+```
+
+```{r nn4}
+set.seed(1)
+#lets split the data 60/40
+library(caret)
+trainIndex <- createDataPartition(iris$Species, p = .6, list = FALSE, times = 1)
+#grab the data
+train <- iris[ trainIndex,]
+test  <- iris[-trainIndex,]
+mygrid<-expand.grid(size = seq(1, 9, by = 2),
+                        decay = c(0.0001,0.001,0.01, 0.1))
+IrisNNET<- train(
+  form = factor(Species) ~ .,
+  data = train,
+  #here we add classProbs because we want probs
+  trControl = trainControl(method = "cv", number = 10,
+                           classProbs =  TRUE),
+  method = "nnet",
+  preProcess = c("center", "scale"),
+  tuneGrid = mygrid,
+  trace=FALSE)
+knitr::kable(IrisNNET$bestTune)
+pl = seq(min(iris$Petal.Length), max(iris$Petal.Length), by=0.1)
+pw = seq(min(iris$Petal.Width), max(iris$Petal.Width), by=0.1)
+# generates the boundaries for your graph
+lgrid <- expand.grid(Petal.Length=pl, 
+                     Petal.Width=pw,
+                     Sepal.Length = 5.4,
+                     Sepal.Width=3.1)
+IrisNNETGrid2 <- predict(IrisNNET, newdata=lgrid)
+IrisNNETGrid <- as.numeric(IrisNNETGrid2)
+# get the points from the test data...
+testPred <- predict(IrisNNET, newdata=test)
+testPred <- as.numeric(testPred)
+# this gets the points for the testPred...
+test$Pred <- testPred
+probs <- matrix(IrisNNETGrid, length(pl), length(pw))
+ggplot(data=lgrid) + stat_contour(aes(x=Petal.Length, y=Petal.Width, z=IrisNNETGrid),bins=10) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, colour=IrisNNETGrid2),alpha=.2) +
+  geom_point(data=test, aes(x=Petal.Length, y=Petal.Width, shape=Species), size=2) + 
+  labs(shape = "Testing Species") +
+  geom_point(data=train, aes(x=Petal.Length, y=Petal.Width, color=Species), size=2, alpha=0.75)+
+  theme_bw()+ 
+  labs(color = "Training Species")+
+  ggtitle("Decision Surface")
+```
+
+Lets get some more [interesting data:](https://archive.ics.uci.edu/ml/datasets/Las+Vegas+Strip)
+
+```{r ucimlr}
+# install.packages("devtools")
+# devtools::install_github("tyluRp/ucimlr")
+datatoget<-ucimlr::ucidata()
+knitr::kable(datatoget)%>%
+  kableExtra::kable_styling("striped")%>%
+  kableExtra::scroll_box(width = "100%",height="300px")
+#https://archive.ics.uci.edu/ml/datasets/Las+Vegas+Strip
+# r read csv from url
+# allows you to directly download csv file from website
+LV_data <- read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/00397/LasVegasTripAdvisorReviews-Dataset.csv", sep=';')
+knitr::kable(head(LV_data,100))%>%
+  kableExtra::kable_styling("striped")%>%
+  kableExtra::scroll_box(width = "100%",height="300px")
+  
+```
+
+# Exercise 1
+
+1.  Use LV_data. Predict `Hotel.stars` with neural networks.
+
+# Regression
+
+```{r nnreg, warning=FALSE,message=FALSE}
+library(tidyverse)
+set.seed(1)
+#lets split the data 60/40
+library(caret)
+trainIndex <- createDataPartition(iris$Sepal.Length, p = .6, list = FALSE, times = 1)
+#grab the data
+IrisTrain <- iris[ trainIndex,]
+IrisTest  <- iris[-trainIndex,]
+# mygrid<-expand.grid(size = seq(1, 9, by = 2),
+#                         decay = c(0.0001,0.001,0.01, 0.1))
+#added something here
+IrisNNET<- train(
+  form = Sepal.Length~Sepal.Width+Petal.Length+Petal.Width+factor(Species),
+  data = IrisTrain,
+  #here we add classProbs because we want probs
+  trControl = trainControl(method = "cv", number = 10),
+  method = "nnet",
+  preProcess = c("center", "scale"),
+  tuneLength = 5,
+  trace=FALSE,
+  linout=T)#need for preds
+#IrisNNET
+knitr::kable(IrisNNET$bestTune)
+plot(IrisNNET)
+IrisNNET_Pred<-predict(IrisNNET,IrisTest)
+knitr::kable(IrisNNET_Pred)%>%
+  kableExtra::kable_styling("striped")%>%
+  kableExtra::scroll_box(width = "50%",height="300px")
+IrisNNETtestpred<-cbind(IrisNNET_Pred,IrisTest)
+#root mean squared error
+RMSE(IrisNNETtestpred$IrisNNET_Pred,IrisNNETtestpred$Sepal.Length)
+#best measure ever...RSquared 
+cor(IrisNNETtestpred$IrisNNET_Pred,IrisNNETtestpred$Sepal.Length)^2
+```
+
+## Partial Dependence Plots
+
+```{r pdp}
+# Compute partial dependence 
+pd <- pdp::partial(IrisNNET, pred.var = c("Sepal.Width","Petal.Length"))
+# Default PDP
+pdp::plotPartial(pd)
+# Add contour lines and use a different color palette
+rwb <- colorRampPalette(c("darkred", "white", "pink"))
+pdp::plotPartial(pd, contour = TRUE, col.regions = rwb)
+# 3-D surface
+pdp::plotPartial(pd, levelplot = FALSE, zlab = "Sepal Length", colorkey = TRUE, 
+                    screen = list(z = -20, x = -60))
+# Interpolate the partial dependence values
+dens <- akima::interp(x = pd$Sepal.Width, y = pd$Petal.Length, z = pd$yhat)
+# 3D partial dependence plot with a coloring scale
+p3 <- plotly::plot_ly(x = dens$x, 
+          y = dens$y, 
+          z = dens$z,
+          colors = c("blue", "grey", "red"),
+          type = "surface")
+# Add axis labels for 3D plots
+p3 <- p3%>% plotly::layout(scene = list(xaxis = list(title = 'Sepal Width'),
+                     yaxis = list(title = 'Petal Length'),
+                     zaxis = list(title = 'Predicted Sepal Length')))
+# Show the plot
+p3
+```
+
