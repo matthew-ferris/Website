@@ -163,7 +163,7 @@ ConfusionMatrix2<-confusionMatrix(knn_pred_sm,as.factor(DataTest$GOING_CONCERN))
 
 ## The Results
 
-The tables below displays what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite. 
+The tables below display what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite. 
 
 ::::: {.panelset}
 
