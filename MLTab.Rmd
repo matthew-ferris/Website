@@ -106,7 +106,7 @@ LV_dataNNETtestpred<-LV_dataNNETtestpred%>%
 
 ## Results
 
-The table below displays what the model predicted vs. what actual occurred. Class2 indicates a Going Concern opinion issued, whereas Class1 is the opposite.
+The table below displays what the model predicted vs. what actual occurred.
 
 ```{r confusion matrix,echo=FALSE}
 NNETConfusion<-confusionMatrix(factor(LV_dataNNETtestpred$prediction),factor(LV_dataNNETtestpred$Tennis.court))
