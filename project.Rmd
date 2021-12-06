@@ -195,6 +195,8 @@ The accuracy, precision, and recall statistics for the first model are *spectacu
 
 Using SMOTE sampling, the sensitivity, recall, and kappa statistics dropped by a relatively insignificant amount. The specificity statistic is much higher, though. The Confusion Matrix for this model shows that a much higher amount of the **actual** Going Concern companies were predicted by the model. However, the model also predicted a much higher amount of non-Going Concern companies to have that issue.
 
+The differences between the two models displays the significance of having a sampling adjustment. SMOTE sampling essentially helps to balance the data. In this case, it attempts to balance the extreme amount of non-Going Concerns to those that are issued a Going Concern opinion. 
+
 ## How can this be useful? 
 
 This model could be used to help identify those companies that are more likely to have a Going Concern issue. This model could help to reduce the likelihood of a type 2 error, which is when the auditor falsely accepts the financial statements, when they should have issued a Going Concern opinion. Using the SMOTE model, an auditor can identify those companies that have a much higher likelihood of having a Going Concern issue. However, there could be a lack of efficiency due to the model identifying a decent amount of non-Going Concern companies. 

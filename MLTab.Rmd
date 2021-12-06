@@ -65,11 +65,11 @@ draw_confusion_matrix <- function(cm) {
 
 ## Purpose
 
-The purpose of this article is to display a use of Neural Networks as a machine learning model. Using the data from this [website](https://archive.ics.uci.edu/ml/machine-learning-databases/00397/LasVegasTripAdvisorReviews-Dataset.csv). Using Neural Networks, I will make predictions of whether the hotels in the observations have a tennis court on their facilities. 
+The purpose of this article is to display a use of Neural Networks as a machine learning model while using the data from this [website](https://archive.ics.uci.edu/ml/machine-learning-databases/00397/LasVegasTripAdvisorReviews-Dataset.csv). Using Neural Networks, I will make predictions of whether the hotels in the observations have a tennis court on their facilities. 
 
 ## What's Neural Networks? 
 
-The function of a neural network is to make predictions of what an observation will be. It takes an input data, and after many repetitions of mathematical algorithms, makes a prediction of what the output will be. It then compares those results with what actually occurs, then adjusts its process to become better. 
+The function of a neural network is to make predictions of what an observation will be. It takes an input data, and after many repetitions of mathematical algorithms, makes a prediction of what the output will be. It then compares those results with what actually occurs, then adjusts its process to become better. It somewhat resembles the Human Nervous System. 
 
 ## The Model
 
@@ -116,4 +116,4 @@ draw_confusion_matrix(NNETConfusion)
 
 ## How can Neural Networks be used in Accounting? 
 
-Neural Networks can have many different uses. In the case of forensic accounting, it can be used to detect fraudulent transactions, which essentially enhances the efficiently and effectiveness of forensic investigations. 
+Neural Networks can have many different uses. In the case of forensic accounting, it can be used to detect fraudulent transactions, which essentially enhances the efficiently and effectiveness of forensic investigations. This will help to decrease the risk of incorrect acceptance during those investigations and make accountants with this skillset more valuable. 
